@@ -3,38 +3,38 @@ using Microsoft.DurableTask;
 using System.Text.Json;
 using WeatherFunction;
 
-[DurableTask]
-public class GetCoordinates
+namespace WeatherFunction.Activities
 {
-    private readonly HttpClient _openCageClient;
-
-    public GetCoordinates(IHttpClientFactory httpClientFactory)
+    [DurableTask]
+    public class GetCoordinates
     {
-        _openCageClient = httpClientFactory.CreateClient("OpenCage");
-    }
+        private readonly HttpClient _openCageClient;
 
-    [Function(nameof(GetCoordinates))]
-    public async Task<(double lat, double lon)> RunActivity([ActivityTrigger] string city)
-    {
-        // Simulate calling the geocoding service
-
-
-        var response = await _openCageClient.GetAsync($"search?q={city}");
-
-        if (!response.IsSuccessStatusCode)
+        public GetCoordinates(IHttpClientFactory httpClientFactory)
         {
-            throw new Exception($"Failed to fetch geocode data for city: {city}");
+            _openCageClient = httpClientFactory.CreateClient("OpenCage");
         }
 
-        var content = await response.Content.ReadAsStringAsync();
-        var locations = JsonSerializer.Deserialize<Location[]>(content);
+        [Function(nameof(GetCoordinates))]
+        public async Task<(double lat, double lon)> RunActivity([ActivityTrigger] string city)
+        {
+            var response = await _openCageClient.GetAsync($"search?q={city}");
 
-        // Assuming the first result is the desired location
-        var latitude = locations[0].Lat;
-        var longitude = locations[0].Lon;
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Failed to fetch geocode data for city: {city}");
+            }
 
-        return (latitude, longitude);
+            var content = await response.Content.ReadAsStringAsync();
+            var locations = JsonSerializer.Deserialize<Location[]>(content);
+
+            // Assuming the first result is the desired location
+            var latitude = locations[0].Lat;
+            var longitude = locations[0].Lon;
+
+            return (latitude, longitude);
+        }
+
+
     }
-
-
 }

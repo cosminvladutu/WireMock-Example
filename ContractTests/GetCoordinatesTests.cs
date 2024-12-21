@@ -4,6 +4,7 @@ using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using WeatherFunction;
 using FluentAssertions;
+using WeatherFunction.Activities;
 
 public class GetCoordinatesTests
 {
@@ -30,7 +31,6 @@ public class GetCoordinatesTests
                     new Location (51.321, 0.123)
                 }));
 
-        // Act: Create a ServiceProvider with the HttpClient pointing to the mock server
         var services = new ServiceCollection();
         services.AddHttpClient("OpenCage", client =>
         {
@@ -40,12 +40,15 @@ public class GetCoordinatesTests
         var serviceProvider = services.BuildServiceProvider();
 
         var httpClientFactory = serviceProvider.GetRequiredService<IHttpClientFactory>();
-        var getCoordinates = new GetCoordinates(httpClientFactory);  // Your function class
+      
+        // ACT
+        var getCoordinates = new GetCoordinates(httpClientFactory);  // Create SUT
 
         var city = "Iasi";
-        var result = await getCoordinates.RunActivity(city);  // Call the activity
 
-        // Assert: Check if the returned coordinates are correct
+        var result = await getCoordinates.RunActivity(city);  
+
+        // Assert
         result.lat.Should().Be(51.321);
         result.lon.Should().Be(0.123);
     }
@@ -62,21 +65,18 @@ public class GetCoordinatesTests
                 .WithStatusCode(404)
                 .WithBody("City not found"));
 
-        // Act: Create a ServiceProvider with the HttpClient pointing to the mock server
         var services = new ServiceCollection();
         services.AddHttpClient("OpenCage", client =>
         {
-            client.BaseAddress = new Uri(_server.Url);  // Convert string to Uri
+            client.BaseAddress = new Uri(_server.Url); 
         });
 
         var serviceProvider = services.BuildServiceProvider();
 
         var httpClientFactory = serviceProvider.GetRequiredService<IHttpClientFactory>();
-        var getCoordinates = new GetCoordinates(httpClientFactory);  // Your function class
+        var getCoordinates = new GetCoordinates(httpClientFactory); 
 
         var exception = await Assert.ThrowsAsync<Exception>(() => getCoordinates.RunActivity("NonExistentCity"));
-
-        // Assert: Exception should be thrown
         exception.Message.Should().Be("Failed to fetch geocode data for city: NonExistentCity");
     }
 
@@ -93,7 +93,6 @@ public class GetCoordinatesTests
                 .WithBodyAsJson(new { lat = 35.6762, lon = 139.6503 })
                 .WithDelay(3000));  // 3-second delay
 
-        // Act: Create ServiceProvider
         var services = new ServiceCollection();
         services.AddHttpClient("OpenCage", client =>
         {
@@ -164,7 +163,7 @@ public class GetCoordinatesTests
         services.AddHttpClient("OpenCage", client =>
         {
             client.BaseAddress = new Uri(_server.Url);
-            client.DefaultRequestHeaders.Add("Authorization", "Bearer test-token");
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer test-token"); // Add the header
         });
 
         var serviceProvider = services.BuildServiceProvider();
@@ -192,8 +191,9 @@ public class GetCoordinatesTests
                 .WithStatusCode(200)
                 .WithBodyAsJson(new[]
                 {
-                new Location (40.7128,-74.0060)
-                })); // Return array of Location objects
+                new Location (40.7128,-74.0060),
+                new Location (42,-74)
+                }));
 
         // Act: Create ServiceProvider
         var services = new ServiceCollection();
@@ -257,12 +257,6 @@ public class GetCoordinatesTests
         parisResult.lat.Should().Be(48.8566);
         parisResult.lon.Should().Be(2.3522);
     }
-
-
-
-
-
-
 
     public void Dispose()
     {

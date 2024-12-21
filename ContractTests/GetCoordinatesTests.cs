@@ -1,15 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Http;
-using Microsoft.Azure.Functions.Worker;
-using Microsoft.Azure.Functions.Worker.Http;
 using WireMock.Server;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
-using WireMock.Matchers.Request;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Xunit;
 using WeatherFunction;
 using FluentAssertions;
 
@@ -233,7 +225,7 @@ public class GetCoordinatesTests
                 .UsingGet())
             .RespondWith(Response.Create()
                 .WithStatusCode(200)
-                .WithBodyAsJson(new { lat = 51.5074, lon = -0.1278 }));
+                .WithBodyAsJson(new[] { new Location(51.5074, -0.1278) }));  // Return array of Location records
 
         _server.Given(Request.Create()
                 .WithPath("/search")
@@ -241,7 +233,7 @@ public class GetCoordinatesTests
                 .UsingGet())
             .RespondWith(Response.Create()
                 .WithStatusCode(200)
-                .WithBodyAsJson(new { lat = 48.8566, lon = 2.3522 }));
+                .WithBodyAsJson(new[] { new Location(48.8566, 2.3522) }));  // Return array of Location records
 
         // Act: Create ServiceProvider
         var services = new ServiceCollection();
@@ -265,6 +257,7 @@ public class GetCoordinatesTests
         parisResult.lat.Should().Be(48.8566);
         parisResult.lon.Should().Be(2.3522);
     }
+
 
 
 

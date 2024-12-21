@@ -20,4 +20,6 @@ namespace WeatherFunction
         public string type { get; set; }
         public float importance { get; set; }
     }
+
+    public record Location(double Lat, double Lon);
 }

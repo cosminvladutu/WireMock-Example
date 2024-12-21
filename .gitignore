@@ -3,3 +3,6 @@
 *.vsidx
 *.suo
 WeatherFunction/ContractTests/obj/
+ContractTests/bin/
+ContractTests/obj/
+.vs/

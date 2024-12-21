@@ -6,7 +6,7 @@ var builder = FunctionsApplication.CreateBuilder(args);
 
 builder.ConfigureFunctionsWebApplication();
 
-builder.Services. // Register HttpClients for OpenCage and Open-Meteo
+builder.Services. // Register named HttpClients for OpenCage and Open-Meteo
         AddHttpClient("OpenCage", client =>
         {
             client.BaseAddress = new Uri("https://geocode.maps.co/");

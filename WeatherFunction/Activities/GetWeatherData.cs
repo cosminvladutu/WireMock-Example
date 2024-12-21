@@ -1,28 +1,31 @@
 ﻿using Microsoft.Azure.Functions.Worker;
 using Microsoft.DurableTask;
 
-[DurableTask]
-public class GetWeatherData
+namespace WeatherFunction.Activities
 {
-    private readonly HttpClient _openMeteoClient;
-
-    public GetWeatherData(IHttpClientFactory httpClientFactory)
+    [DurableTask]
+    public class GetWeatherData
     {
-        _openMeteoClient = httpClientFactory.CreateClient("OpenMeteo");
-    }
+        private readonly HttpClient _openMeteoClient;
 
-
-    [Function(nameof(GetWeatherData))]
-    public async Task<string> RunActivity([ActivityTrigger]  (double lat, double lon) coordinates)
-    {
-        // Use the injected HttpClient for OpenMeteo
-        var response = await _openMeteoClient.GetAsync($"forecast?latitude={coordinates.lat}&longitude={coordinates.lon}&current_weather=true");
-
-        if (!response.IsSuccessStatusCode)
+        public GetWeatherData(IHttpClientFactory httpClientFactory)
         {
-            throw new Exception("Failed to fetch weather data.");
+            _openMeteoClient = httpClientFactory.CreateClient("OpenMeteo");
         }
 
-        return await response.Content.ReadAsStringAsync();
+
+        [Function(nameof(GetWeatherData))]
+        public async Task<string> RunActivity([ActivityTrigger] (double lat, double lon) coordinates)
+        {
+            // Use the injected HttpClient for OpenMeteo
+            var response = await _openMeteoClient.GetAsync($"forecast?latitude={coordinates.lat}&longitude={coordinates.lon}&current_weather=true");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Failed to fetch weather data.");
+            }
+
+            return await response.Content.ReadAsStringAsync();
+        }
     }
 }

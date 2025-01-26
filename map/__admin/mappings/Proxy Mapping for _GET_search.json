@@ -1,6 +1,6 @@
 {
-  "Guid": "878ae0c4-2800-4bed-81ad-3e69cf0a2c21",
-  "UpdatedAt": "2025-01-26T13:30:46.3870924Z",
+  "Guid": "0a099dbf-fc3d-4179-9dd9-3d9226a7f3a9",
+  "UpdatedAt": "2025-01-26T13:39:30.1187452Z",
   "Title": "Proxy Mapping for GET /search",
   "Description": "Proxy Mapping for GET /search",
   "Priority": -2000000,
@@ -24,7 +24,7 @@
         "Matchers": [
           {
             "Name": "WildcardMatcher",
-            "Pattern": "localhost:55233",
+            "Pattern": "localhost:55443",
             "IgnoreCase": true
           }
         ],
@@ -159,19 +159,19 @@
     "Headers": {
       "Content-Type": "application/json; charset=UTF-8",
       "Last-Modified": "Sun, 26 Jan 2025 12:52:29 GMT",
-      "Date": "Sun, 26 Jan 2025 13:30:46 GMT",
+      "Date": "Sun, 26 Jan 2025 13:39:30 GMT",
       "Transfer-Encoding": "chunked",
       "Connection": "keep-alive",
       "Vary": "Accept-Encoding",
       "Access-Control-Allow-Origin": "*",
       "CF-Cache-Status": "HIT",
-      "Age": "2297",
-      "Report-To": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v4?s=nRoUChgIVshPDtJgSqDac20ERs5Zvlv%2Fskss70PBCDPh%2BQq%2FAgujDIjueoOo8eInIhfj6LfbuA%2Fwr1w9kmSea13rVwDR6iYN0N9alOMtUzzyKlW0Q3iRfVYoDZkdMXiBhA%3D%3D\"}],\"group\":\"cf-nel\",\"max_age\":604800}",
+      "Age": "2821",
+      "Report-To": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v4?s=lWAGuSJz9eHhhkwF59CPu9RH7exiRuMp95K%2Fs31WYYuVOHIXQjl5pdipxB6p1hsLOHsXo6IPZPGKdTJBKa8j30YUlU%2BRjL60Js1Ye5QhvdeaHpRt4OThiTUk2lxFk2ecuQ%3D%3D\"}],\"group\":\"cf-nel\",\"max_age\":604800}",
       "NEL": "{\"success_fraction\":0,\"report_to\":\"cf-nel\",\"max_age\":604800}",
       "Server": "cloudflare",
-      "CF-RAY": "9080dc082d84e4af-OTP",
+      "CF-RAY": "9080e8d18bdbc9d1-OTP",
       "Alt-Svc": "h3=\":443\"",
-      "Server-Timing": "cfL4;desc=\"?proto=TCP&rtt=18745&min_rtt=17029&rtt_var=7612&sent=3&recv=6&lost=0&retrans=0&sent_bytes=115&recv_bytes=529&delivery_rate=82917&cwnd=237&unsent_bytes=0&cid=80c6b00e13ea72c7&ts=31&x=0\""
+      "Server-Timing": "cfL4;desc=\"?proto=TCP&rtt=12378&min_rtt=11913&rtt_var=5399&sent=3&recv=6&lost=0&retrans=0&sent_bytes=115&recv_bytes=529&delivery_rate=90287&cwnd=246&unsent_bytes=0&cid=211491f248fd29ff&ts=29&x=0\""
     }
   }
 }

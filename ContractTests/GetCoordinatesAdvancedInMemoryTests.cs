@@ -1,47 +1,49 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using WireMock.Server;
 using WireMock.RequestBuilders;
+using WireMock.ResponseBuilders;
+using WeatherFunction;
 using FluentAssertions;
 using WeatherFunction.Activities;
 using WireMock.Settings;
-using WireMock.Handlers;
 
-public class GetCoordinatesAdvancedTests : IDisposable
+public class GetCoordinatesAdvancedInMemoryTests : IDisposable
 {
     private readonly WireMockServer _server;
 
-    public GetCoordinatesAdvancedTests()
+    public GetCoordinatesAdvancedInMemoryTests()
     {
-        // Ensure the directory exists for saving mappings
-        var directoryPath = @"C:\PoCs\WireMock-Example\map";
-        if (!Directory.Exists(directoryPath))
+        // Configure WireMock server to store mappings in memory
+        var settings = new WireMockServerSettings
         {
-            Directory.CreateDirectory(directoryPath);
-        }
-
-        // Start WireMock server with Proxy and Record settings
-        _server = WireMockServer.Start(new WireMockServerSettings
-        {
-            // Enable proxy and record
+            // Enable in-memory storage
+            FileSystemHandler = null, // Disable file system storage
             ProxyAndRecordSettings = new ProxyAndRecordSettings
             {
-                // Set proxy URL to forward requests to
-                Url = "https://geocode.maps.co/",  // Proxy target API URL
-                SaveMapping = true,
-                SaveMappingToFile = true
-            },
-            FileSystemHandler = new LocalFileSystemHandler(directoryPath) // Directory to save mappings
-        });
+                SaveMapping = true, // This will save the mappings to memory
+                Url = "https://geocode.maps.co", // External API you're proxying to
+            }
+        };
+
+        _server = WireMockServer.Start(settings);
     }
 
     [Fact]
     public async Task ShouldReturnLatLon_For_IasiCity()
     {
-        // Arrange: Set up WireMock server to record requests and forward to external API
+        // Arrange: Set up mock response for Iasi city query
+        _server.Given(Request.Create()
+                .WithPath("/search")
+                .WithParam("q", "Iasi")
+                .UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithBodyAsJson(new[] { new Location(51.321, 0.123) })); // Mocked response for Iasi
+
         var services = new ServiceCollection();
         services.AddHttpClient("OpenCage", client =>
         {
-            client.BaseAddress = new Uri(_server.Url);  // WireMock server URL (acts as proxy)
+            client.BaseAddress = new Uri(_server.Url);  // WireMock server URL
         });
 
         var serviceProvider = services.BuildServiceProvider();
@@ -50,17 +52,20 @@ public class GetCoordinatesAdvancedTests : IDisposable
         var getCoordinates = new GetCoordinates(httpClientFactory);  // SUT
         var city = "Iasi";
 
-        // Act: Send the request to WireMock server, which will proxy to the actual API
+        // Act: Send the request to WireMock server
         var result = await getCoordinates.RunActivity(city);
 
-        // Optionally, check if the request was logged
-        var logEntries = _server.FindLogEntries(Request.Create().WithPath("/search"));
+        // Assert: Verify the result
+        result.lat.Should().Be(51.321); 
+        result.lon.Should().Be(0.123);  
+
+        // Optionally, check if the request was logged in memory
+        var logEntries = _server.LogEntries; // Access log entries directly
         logEntries.Should().ContainSingle(); // Ensure the request was logged
     }
 
-
     [Fact]
-    public async Task ShouldReplayRecordedResponse_For_IasiCity()
+    public async Task ShouldReplayRecordedResponse_FromMemory_For_IasiCity()
     {
         // Arrange: Set up mock response for Iasi city query (this simulates the initial recording)
         var services = new ServiceCollection();
@@ -75,12 +80,8 @@ public class GetCoordinatesAdvancedTests : IDisposable
         var getCoordinates = new GetCoordinates(httpClientFactory);  // SUT
         var city = "Iasi";
 
-        // Act: Send the request to WireMock server, which will proxy to the actual API and save response
+        // Act: Send the request to WireMock server, which will proxy to the actual API and save response in memory
         var result = await getCoordinates.RunActivity(city);
-
-        // Verify that the mapping was saved
-        var mappingFilePath = @"C:\PoCs\WireMock-Example\map\__admin\mappings\Proxy Mapping for _GET_search.json"; // Adjust this path if necessary
-        System.IO.File.Exists(mappingFilePath).Should().BeTrue(); // Check if the mapping file exists
 
         // Assert: Verify the result
         result.lat.Should().Be(0);

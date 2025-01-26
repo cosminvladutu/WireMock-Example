@@ -225,7 +225,7 @@ public class GetCoordinatesTests
                 .UsingGet())
             .RespondWith(Response.Create()
                 .WithStatusCode(200)
-                .WithBodyAsJson(new[] { new Location(51.5074, -0.1278) }));  // Return array of Location records
+                .WithBodyAsJson(new[] { new Location(51.5074, -0.1278) }));
 
         _server.Given(Request.Create()
                 .WithPath("/search")
@@ -233,7 +233,7 @@ public class GetCoordinatesTests
                 .UsingGet())
             .RespondWith(Response.Create()
                 .WithStatusCode(200)
-                .WithBodyAsJson(new[] { new Location(48.8566, 2.3522) }));  // Return array of Location records
+                .WithBodyAsJson(new[] { new Location(48.8566, 2.3522) }));
 
         // Act: Create ServiceProvider
         var services = new ServiceCollection();
@@ -256,6 +256,102 @@ public class GetCoordinatesTests
 
         parisResult.lat.Should().Be(48.8566);
         parisResult.lon.Should().Be(2.3522);
+    }
+
+    [Fact]
+    public async Task ShouldVerifyRequests()
+    {
+        // Arrange: Mock two responses for different cities
+        _server.Given(Request.Create()
+                .WithPath("/search")
+                .WithParam("q", "London")
+                .UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithBodyAsJson(new[] { new Location(51.5074, -0.1278) }));
+
+        _server.Given(Request.Create()
+                .WithPath("/search")
+                .WithParam("q", "Paris")
+                .UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithBodyAsJson(new[] { new Location(48.8566, 2.3522) }));
+
+        // Act: Create ServiceProvider
+        var services = new ServiceCollection();
+        services.AddHttpClient("OpenCage", client =>
+        {
+            client.BaseAddress = new Uri(_server.Url);
+        });
+
+        var serviceProvider = services.BuildServiceProvider();
+        var httpClientFactory = serviceProvider.GetRequiredService<IHttpClientFactory>();
+        var getCoordinates = new GetCoordinates(httpClientFactory);
+
+        // Act: Fetch coordinates for London and Paris
+        await getCoordinates.RunActivity("London");
+        await getCoordinates.RunActivity("Paris");
+
+        // Assert
+        _server.LogEntries.Should().HaveCount(2);
+        _server.LogEntries.Should().Contain(s => s.RequestMessage.Path == "/search" && s.RequestMessage.Method == "GET");
+        _server.LogEntries.Count(entry => entry.RequestMessage.Query["q"].Contains("London")).Should().Be(1);
+        _server.LogEntries.Count(entry => entry.RequestMessage.Query["q"].Contains("Paris")).Should().Be(1);
+    }
+
+    [Fact]
+    public async Task ShouldVerifyRequestsV2()
+    {
+        // Arrange: Mock two responses for different cities
+        _server.Given(Request.Create()
+                .WithPath("/search")
+                .WithParam("q", "London")
+                .UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithBodyAsJson(new[] { new Location(51.5074, -0.1278) }));
+
+        _server.Given(Request.Create()
+                .WithPath("/search")
+                .WithParam("q", "Paris")
+                .UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(200)
+                .WithBodyAsJson(new[] { new Location(48.8566, 2.3522) }));
+
+        // Act: Create ServiceProvider
+        var services = new ServiceCollection();
+        services.AddHttpClient("OpenCage", client =>
+        {
+            client.BaseAddress = new Uri(_server.Url);
+        });
+
+        var serviceProvider = services.BuildServiceProvider();
+        var httpClientFactory = serviceProvider.GetRequiredService<IHttpClientFactory>();
+        var getCoordinates = new GetCoordinates(httpClientFactory);
+
+        // Act: Fetch coordinates for London and Paris
+        await getCoordinates.RunActivity("London");
+        await getCoordinates.RunActivity("Paris");
+
+        // Assert
+        // Find requests with specific query parameters
+        var londonRequests = _server.FindLogEntries(Request.Create()
+            .WithPath("/search")
+            .WithParam("q", "London"));
+
+        var parisRequests = _server.FindLogEntries(Request.Create()
+            .WithPath("/search")
+            .WithParam("q", "Paris"));
+
+        londonRequests.Should().NotBeNull();
+        londonRequests.Should().HaveCount(1);
+        londonRequests.First().RequestMessage.Query["q"].Should().Contain("London");
+
+        parisRequests.Should().NotBeNull();
+        parisRequests.Should().HaveCount(1);
+        parisRequests.First().RequestMessage.Query["q"].Should().Contain("Paris");
     }
 
     public void Dispose()

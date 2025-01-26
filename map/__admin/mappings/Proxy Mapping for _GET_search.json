@@ -1,0 +1,177 @@
+{
+  "Guid": "878ae0c4-2800-4bed-81ad-3e69cf0a2c21",
+  "UpdatedAt": "2025-01-26T13:30:46.3870924Z",
+  "Title": "Proxy Mapping for GET /search",
+  "Description": "Proxy Mapping for GET /search",
+  "Priority": -2000000,
+  "Request": {
+    "Path": {
+      "Matchers": [
+        {
+          "Name": "WildcardMatcher",
+          "Pattern": "/search",
+          "IgnoreCase": false
+        }
+      ]
+    },
+    "Methods": [
+      "GET"
+    ],
+    "HttpVersion": "1.1",
+    "Headers": [
+      {
+        "Name": "Host",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "localhost:55233",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      }
+    ],
+    "Params": [
+      {
+        "Name": "q",
+        "Matchers": [
+          {
+            "Name": "ExactMatcher",
+            "Pattern": "Iasi",
+            "IgnoreCase": false
+          }
+        ]
+      }
+    ]
+  },
+  "Response": {
+    "StatusCode": 200,
+    "BodyAsJson": [
+      {
+        "place_id": 53204344,
+        "licence": "Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright",
+        "osm_type": "relation",
+        "osm_id": 1207838,
+        "boundingbox": [
+          "47.0848238",
+          "47.2279047",
+          "27.4765246",
+          "27.6920155"
+        ],
+        "lat": "47.1615598",
+        "lon": "27.5837814",
+        "display_name": "Iași, Iași Metropolitan Area, Iași, Romania",
+        "class": "boundary",
+        "type": "administrative",
+        "importance": 0.5948804252583375
+      },
+      {
+        "place_id": 53189773,
+        "licence": "Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright",
+        "osm_type": "relation",
+        "osm_id": 2256747,
+        "boundingbox": [
+          "46.805834",
+          "47.5894225",
+          "26.4929859",
+          "28.1274762"
+        ],
+        "lat": "47.197737200000006",
+        "lon": "27.197059849658395",
+        "display_name": "Iași, Romania",
+        "class": "boundary",
+        "type": "administrative",
+        "importance": 0.5349687385306502
+      },
+      {
+        "place_id": 52199961,
+        "licence": "Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright",
+        "osm_type": "node",
+        "osm_id": 442929793,
+        "boundingbox": [
+          "45.742786",
+          "45.782786",
+          "24.9103781",
+          "24.9503781"
+        ],
+        "lat": "45.762786",
+        "lon": "24.9303781",
+        "display_name": "Iași, Recea, Brașov, 507184, Romania",
+        "class": "place",
+        "type": "village",
+        "importance": 0.40124284206116956
+      },
+      {
+        "place_id": 48581107,
+        "licence": "Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright",
+        "osm_type": "way",
+        "osm_id": 660659128,
+        "boundingbox": [
+          "37.9787456",
+          "37.978902",
+          "23.750523",
+          "23.7509877"
+        ],
+        "lat": "37.9787456",
+        "lon": "23.750523",
+        "display_name": "Ιασίου, Συνοικία Κολωνακίου, 1st District of Athens, Athens, Municipality of Athens, Regional Unit of Central Athens, Attica, 115 21, Greece",
+        "class": "highway",
+        "type": "residential",
+        "importance": 0.10000999999999993
+      },
+      {
+        "place_id": 53215290,
+        "licence": "Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright",
+        "osm_type": "node",
+        "osm_id": 247416268,
+        "boundingbox": [
+          "47.16055",
+          "47.17055",
+          "27.5643656",
+          "27.5743656"
+        ],
+        "lat": "47.16555",
+        "lon": "27.5693656",
+        "display_name": "Iași, Piața Gării, Gară, Iași, Iași Metropolitan Area, Iași, 700089, Romania",
+        "class": "railway",
+        "type": "station",
+        "importance": 9.99999999995449E-06
+      },
+      {
+        "place_id": 53203385,
+        "licence": "Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright",
+        "osm_type": "node",
+        "osm_id": 8710522807,
+        "boundingbox": [
+          "47.1654015",
+          "47.1655015",
+          "27.5695798",
+          "27.5696798"
+        ],
+        "lat": "47.1654515",
+        "lon": "27.5696298",
+        "display_name": "Iași, Piața Gării, Gară, Iași, Iași Metropolitan Area, Iași, 700089, Romania",
+        "class": "railway",
+        "type": "stop",
+        "importance": 9.99999999995449E-06
+      }
+    ],
+    "Headers": {
+      "Content-Type": "application/json; charset=UTF-8",
+      "Last-Modified": "Sun, 26 Jan 2025 12:52:29 GMT",
+      "Date": "Sun, 26 Jan 2025 13:30:46 GMT",
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "Vary": "Accept-Encoding",
+      "Access-Control-Allow-Origin": "*",
+      "CF-Cache-Status": "HIT",
+      "Age": "2297",
+      "Report-To": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v4?s=nRoUChgIVshPDtJgSqDac20ERs5Zvlv%2Fskss70PBCDPh%2BQq%2FAgujDIjueoOo8eInIhfj6LfbuA%2Fwr1w9kmSea13rVwDR6iYN0N9alOMtUzzyKlW0Q3iRfVYoDZkdMXiBhA%3D%3D\"}],\"group\":\"cf-nel\",\"max_age\":604800}",
+      "NEL": "{\"success_fraction\":0,\"report_to\":\"cf-nel\",\"max_age\":604800}",
+      "Server": "cloudflare",
+      "CF-RAY": "9080dc082d84e4af-OTP",
+      "Alt-Svc": "h3=\":443\"",
+      "Server-Timing": "cfL4;desc=\"?proto=TCP&rtt=18745&min_rtt=17029&rtt_var=7612&sent=3&recv=6&lost=0&retrans=0&sent_bytes=115&recv_bytes=529&delivery_rate=82917&cwnd=237&unsent_bytes=0&cid=80c6b00e13ea72c7&ts=31&x=0\""
+    }
+  }
+}

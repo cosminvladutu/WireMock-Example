@@ -58,10 +58,6 @@ public class GetCoordinatesAdvancedTests : IDisposable
         // Act: Send the request to WireMock server, which will proxy to the actual API
         var result = await getCoordinates.RunActivity(city);
 
-        // Assert: Verify the result
-        //result.lat.Should().Be(51.321);  // Check expected latitude
-        //result.lon.Should().Be(0.123);  // Check expected longitude
-
         // Optionally, check if the request was logged
         var logEntries = _server.FindLogEntries(Request.Create().WithPath("/search"));
         logEntries.Should().ContainSingle(); // Ensure the request was logged

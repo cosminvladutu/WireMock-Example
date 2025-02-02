@@ -40,13 +40,13 @@ public class GetCoordinatesTests
         var serviceProvider = services.BuildServiceProvider();
 
         var httpClientFactory = serviceProvider.GetRequiredService<IHttpClientFactory>();
-      
+
         // ACT
         var getCoordinates = new GetCoordinates(httpClientFactory);  // Create SUT
 
         var city = "Iasi";
 
-        var result = await getCoordinates.RunActivity(city);  
+        var result = await getCoordinates.RunActivity(city);
 
         // Assert
         result.lat.Should().Be(51.321);
@@ -68,13 +68,13 @@ public class GetCoordinatesTests
         var services = new ServiceCollection();
         services.AddHttpClient("OpenCage", client =>
         {
-            client.BaseAddress = new Uri(_server.Url); 
+            client.BaseAddress = new Uri(_server.Url);
         });
 
         var serviceProvider = services.BuildServiceProvider();
 
         var httpClientFactory = serviceProvider.GetRequiredService<IHttpClientFactory>();
-        var getCoordinates = new GetCoordinates(httpClientFactory); 
+        var getCoordinates = new GetCoordinates(httpClientFactory);
 
         var exception = await Assert.ThrowsAsync<Exception>(() => getCoordinates.RunActivity("NonExistentCity"));
         exception.Message.Should().Be("Failed to fetch geocode data for city: NonExistentCity");

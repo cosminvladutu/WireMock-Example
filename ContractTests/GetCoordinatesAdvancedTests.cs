@@ -83,15 +83,15 @@ public class GetCoordinatesAdvancedTests : IDisposable
         System.IO.File.Exists(mappingFilePath).Should().BeTrue(); // Check if the mapping file exists
 
         // Assert: Verify the result
-        result.lat.Should().Be(0);
-        result.lon.Should().Be(0);
+        result.lat.Should().Be(47.1615598);
+        result.lon.Should().Be(27.5837814);
 
         // Now, make the same request again (replay)
         var resultReplay = await getCoordinates.RunActivity(city);
 
         // Assert: Verify the replayed result (should match the original response)
-        resultReplay.lat.Should().Be(0);
-        resultReplay.lon.Should().Be(0);
+        resultReplay.lat.Should().Be(47.1615598);
+        resultReplay.lon.Should().Be(27.5837814);
     }
 
     public void Dispose()

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Azure.Functions.Worker;
 using Microsoft.DurableTask;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using WeatherFunction;
 
 namespace WeatherFunction.Activities
@@ -25,8 +26,14 @@ namespace WeatherFunction.Activities
                 throw new Exception($"Failed to fetch geocode data for city: {city}");
             }
 
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                NumberHandling = JsonNumberHandling.AllowReadingFromString
+            };
+
             var content = await response.Content.ReadAsStringAsync();
-            var locations = JsonSerializer.Deserialize<Location[]>(content);
+            var locations = JsonSerializer.Deserialize<Location[]>(content, options);
 
             // Assuming the first result is the desired location
             var latitude = locations[0].Lat;

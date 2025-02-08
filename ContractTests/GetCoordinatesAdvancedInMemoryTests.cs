@@ -56,8 +56,8 @@ public class GetCoordinatesAdvancedInMemoryTests : IDisposable
         var result = await getCoordinates.RunActivity(city);
 
         // Assert: Verify the result
-        result.lat.Should().Be(51.321); 
-        result.lon.Should().Be(0.123);  
+        result.Lat.Should().Be(51.321); 
+        result.Lon.Should().Be(0.123);  
 
         // Optionally, check if the request was logged in memory
         var logEntries = _server.LogEntries; // Access log entries directly
@@ -67,7 +67,7 @@ public class GetCoordinatesAdvancedInMemoryTests : IDisposable
     [Fact]
     public async Task ShouldReplayRecordedResponse_FromMemory_For_IasiCity()
     {
-        // Arrange: Set up mock response for Iasi city query (this simulates the initial recording)
+        // Arrange: Set up mock response for Iasi city query (this simuLates the initial recording)
         var services = new ServiceCollection();
         services.AddHttpClient("OpenCage", client =>
         {
@@ -84,15 +84,15 @@ public class GetCoordinatesAdvancedInMemoryTests : IDisposable
         var result = await getCoordinates.RunActivity(city);
 
         // Assert: Verify the result
-        result.lat.Should().Be(47.1615598);
-        result.lon.Should().Be(27.5837814);
+        result.Lat.Should().Be(47.1615598);
+        result.Lon.Should().Be(27.5837814);
 
         // Now, make the same request again (replay)
         var resultReplay = await getCoordinates.RunActivity(city);
 
         // Assert: Verify the replayed result (should match the original response)
-        result.lat.Should().Be(47.1615598);
-        result.lon.Should().Be(27.5837814);
+        result.Lat.Should().Be(47.1615598);
+        result.Lon.Should().Be(27.5837814);
     }
 
     public void Dispose()

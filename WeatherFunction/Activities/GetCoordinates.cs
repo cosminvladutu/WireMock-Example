@@ -17,7 +17,7 @@ namespace WeatherFunction.Activities
         }
 
         [Function(nameof(GetCoordinates))]
-        public async Task<(double lat, double lon)> RunActivity([ActivityTrigger] string city)
+        public async Task<Location> RunActivity([ActivityTrigger] string city)
         {
             var response = await _openCageClient.GetAsync($"search?q={city}");
 
@@ -39,7 +39,7 @@ namespace WeatherFunction.Activities
             var latitude = locations[0].Lat;
             var longitude = locations[0].Lon;
 
-            return (latitude, longitude);
+            return new Location(latitude, longitude);
         }
 
 

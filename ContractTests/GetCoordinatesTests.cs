@@ -49,8 +49,8 @@ public class GetCoordinatesTests
         var result = await getCoordinates.RunActivity(city);
 
         // Assert
-        result.lat.Should().Be(51.321);
-        result.lon.Should().Be(0.123);
+        result.Lat.Should().Be(51.321);
+        result.Lon.Should().Be(0.123);
     }
 
     [Fact]
@@ -83,14 +83,14 @@ public class GetCoordinatesTests
     [Fact]
     public async Task ShouldTimeoutAfterDelay()
     {
-        // Arrange: Simulate a 3-second delay before responding
+        // Arrange: SimuLate a 3-second delay before responding
         _server.Given(Request.Create()
                 .WithPath("/search")
                 .WithParam("q", "Tokyo")
                 .UsingGet())
             .RespondWith(Response.Create()
                 .WithStatusCode(200)
-                .WithBodyAsJson(new { lat = 35.6762, lon = 139.6503 })
+                .WithBodyAsJson(new { Lat = 35.6762, Lon = 139.6503 })
                 .WithDelay(3000));  // 3-second delay
 
         var services = new ServiceCollection();
@@ -174,8 +174,8 @@ public class GetCoordinatesTests
         var result = await getCoordinates.RunActivity("Madrid");
 
         // Assert: Verify the result
-        result.lat.Should().Be(40.4168);
-        result.lon.Should().Be(-3.7038);
+        result.Lat.Should().Be(40.4168);
+        result.Lon.Should().Be(-3.7038);
     }
 
 
@@ -210,8 +210,8 @@ public class GetCoordinatesTests
         var result = await getCoordinates.RunActivity("New York");
 
         // Assert: Ensure the coordinates are correct
-        result.lat.Should().Be(40.7128);
-        result.lon.Should().Be(-74.0060);
+        result.Lat.Should().Be(40.7128);
+        result.Lon.Should().Be(-74.0060);
     }
 
 
@@ -247,15 +247,15 @@ public class GetCoordinatesTests
         var getCoordinates = new GetCoordinates(httpClientFactory);
 
         // Act: Fetch coordinates for London and Paris
-        var londonResult = await getCoordinates.RunActivity("London");
+        var LondonResult = await getCoordinates.RunActivity("London");
         var parisResult = await getCoordinates.RunActivity("Paris");
 
         // Assert: Ensure the correct coordinates are returned
-        londonResult.lat.Should().Be(51.5074);
-        londonResult.lon.Should().Be(-0.1278);
+        LondonResult.Lat.Should().Be(51.5074);
+        LondonResult.Lon.Should().Be(-0.1278);
 
-        parisResult.lat.Should().Be(48.8566);
-        parisResult.lon.Should().Be(2.3522);
+        parisResult.Lat.Should().Be(48.8566);
+        parisResult.Lon.Should().Be(2.3522);
     }
 
     [Fact]
@@ -337,7 +337,7 @@ public class GetCoordinatesTests
 
         // Assert
         // Find requests with specific query parameters
-        var londonRequests = _server.FindLogEntries(Request.Create()
+        var LondonRequests = _server.FindLogEntries(Request.Create()
             .WithPath("/search")
             .WithParam("q", "London"));
 
@@ -345,9 +345,9 @@ public class GetCoordinatesTests
             .WithPath("/search")
             .WithParam("q", "Paris"));
 
-        londonRequests.Should().NotBeNull();
-        londonRequests.Should().HaveCount(1);
-        londonRequests.First().RequestMessage.Query["q"].Should().Contain("London");
+        LondonRequests.Should().NotBeNull();
+        LondonRequests.Should().HaveCount(1);
+        LondonRequests.First().RequestMessage.Query["q"].Should().Contain("London");
 
         parisRequests.Should().NotBeNull();
         parisRequests.Should().HaveCount(1);

@@ -15,10 +15,10 @@ namespace WeatherFunction.Activities
 
 
         [Function(nameof(GetWeatherData))]
-        public async Task<string> RunActivity([ActivityTrigger] (double lat, double lon) coordinates)
+        public async Task<string> RunActivity([ActivityTrigger] Location coordinates)
         {
             // Use the injected HttpClient for OpenMeteo
-            var response = await _openMeteoClient.GetAsync($"forecast?latitude={coordinates.lat}&longitude={coordinates.lon}&current_weather=true");
+            var response = await _openMeteoClient.GetAsync($"forecast?latitude={coordinates.Lat}&longitude={coordinates.Lon}&current_weather=true");
 
             if (!response.IsSuccessStatusCode)
             {

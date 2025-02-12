@@ -12,8 +12,8 @@ namespace WeatherFunction.Orchestrators
         {
             string city = context.GetInput<string>();
 
-            var coordinates = await context.CallActivityAsync<(double lat, double lon)>(nameof(GetCoordinates), city);
-            var weatherData = await context.CallActivityAsync<string>(nameof(GetWeatherData), coordinates);
+            var coordonates = await context.CallActivityAsync<Location>(nameof(GetCoordinates), city);
+            var weatherData = await context.CallActivityAsync<string>(nameof(GetWeatherData), coordonates);
 
             return weatherData;
         }
